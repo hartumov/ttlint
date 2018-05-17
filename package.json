@@ -1,6 +1,6 @@
 {
   "name": "ttlint",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Linter for Template Toolkit",
   "bin": {
     "ttlint": "index.js"
@@ -11,6 +11,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hartumov/ttlint"
   },
   "author": "Hartumov G.",
   "license": "MIT",

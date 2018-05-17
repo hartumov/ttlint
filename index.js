@@ -48,7 +48,7 @@ function main (filename) {
               fileContent[line] = fileContent[line].replace(parametersPair,'').trim();
             }
 
-            paramLines.push(indent + '\t\t' + restSymbols[0] + ';');
+            paramLines.push(indent + '\t\t' + restSymbols[0]);
             paramLines.push(indent + '\t'   + restSymbols[1]);
 
             // Line indentation
