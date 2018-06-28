@@ -83,6 +83,16 @@ function main (filename) {
                 }
               }
 
+              if (fileContent[j].match( /\=\>( *)\[/ )) {
+                for (let l = j; l < fileContent.length; l++) {
+                  skipLines.push(l);
+                  if (fileContent[l].match( /\]/ )) {
+                    skipLines.push(l);
+                    break;
+                  }
+                }
+              }
+
             }
 
           } // end params
