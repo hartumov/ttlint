@@ -24,6 +24,9 @@ function main (filename) {
 
         for (let line = 0; line < fileContent.length; line++) { // start scan lines
 
+          // add html.body.stylesheets
+          fileContent[line] = fileContent[line].replace( /html\.stylesheets\.push/g, 'html.body.stylesheets.push' );
+
           // beautify brackets
           fileContent[line] = methods.beautifyTTBrackets(fileContent[line]);
 
