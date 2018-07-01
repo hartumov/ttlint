@@ -12,6 +12,8 @@ const files = process.argv.splice(process.execArgv.length + 2);
 
 let bracketsPair = [];
 let skipLines = [];
+let isParamsEnd = true;
+let paramsEndLines = [];
 
 function main (filename) {
 
@@ -25,7 +27,7 @@ function main (filename) {
           // beautify brackets
           fileContent[line] = methods.beautifyTTBrackets(fileContent[line]);
 
-          // split params in they in one line
+          // split params in one line
           if ( fileContent[line].match( /params( *)=>( *)\{( *)\S(.*)\}/g ) ) {
 
             let paramLines   = [];
@@ -59,6 +61,23 @@ function main (filename) {
 
           }
 
+          // save params end rows
+          if ( fileContent[line].match( /params( *)\=\>( *)\{/g ) ) {
+              for (let j = line+1; j < fileContent.length; j++) {
+                if ( fileContent[j].match( /\{/ ) ) {
+                  isParamsEnd = false;
+                }
+                if (fileContent[j].match( /\}/ ) && !isParamsEnd) {
+                  isParamsEnd = true;
+                  continue;
+                }
+                if (fileContent[j].match( /\}/ ) && isParamsEnd) {
+                  paramsEndLines.push(j);
+                  break;
+                }
+              }
+          }
+
           // find blocks with params
           if ( fileContent[line].match( /params( *)\=\>( *)\{/g ) ) {
 
@@ -71,12 +90,13 @@ function main (filename) {
             // find brackets and push them into array
             for (let j = line+1; j < fileContent.length; j++) {
 
-              if (fileContent[j].match( /\};/ )) break;
+              if (fileContent[j].match( /\}/ ) && paramsEndLines.includes(j)) break;
               fileContent[j] = methods.alignArrows(fileContent[j]);
 
               if (fileContent[j].match( /\{/ )) {
                 for (let l = j+1; l < fileContent.length; l++) {
                   if (fileContent[l].match( /\}/ )) {
+                    fileContent[l] = methods.addCommaToEnd(fileContent[l]);
                     bracketsPair.push({'open': j,'close': l});
                     break;
                   }
@@ -118,7 +138,6 @@ function main (filename) {
 
           // trnasform inner parameters
           for (let i = bracketsPair[0].open + 1; i < bracketsPair[0].close; i++) {
-            //fileContent[i] = methods.alignArrows(fileContent[j]); // DELETE
             fileContent[i] = methods.addCommaToEnd(fileContent[i]);
 
             let key = fileContent[i].match(/[\S]+/);
@@ -152,10 +171,9 @@ function main (filename) {
             });
 
             for (let j = line+1; j < fileContent.length; j++) {
-              if (fileContent[j].match( /\};/ )) break;
+              if (fileContent[j].match( /\}/ ) && paramsEndLines.includes(j)) break;
               if (skipLines.includes(j)) continue;
 
-              //fileContent[j] = methods.alignArrows(fileContent[j]); // DELETE
               fileContent[j] = methods.addCommaToEnd(fileContent[j]);
 
               let key = fileContent[j].match(/[\S]+/);
@@ -166,7 +184,7 @@ function main (filename) {
             }
 
             for (let j = line+1; j < fileContent.length; j++) {
-              if (fileContent[j].match( /\};/ )) break;
+              if (fileContent[j].match( /\}/ ) && paramsEndLines.includes(j)) break;
               if (skipLines.includes(j)) continue;
 
               fileContent[j] = fileContent[j].replace(/[\S]+/, str => {
