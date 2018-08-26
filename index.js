@@ -2,20 +2,29 @@
 'use strict';
 
 // Modules
-const methods    = require("./lib/methods.js"),
-      fs         = require("fs"),
-      path       = require("path"),
-      optionator = require("optionator");
+const methods  = require('./lib/methods.js');
+const fs       = require('fs');
+const glob     = require('glob');
+const minimist = require('minimist');
 
-// send args in cli
-const files = process.argv.splice(process.execArgv.length + 2);
+const args = minimist(process.argv.slice(2));
 
 let bracketsPair = [];
 let skipLines = [];
 let isParamsEnd = true;
 let paramsEndLines = [];
 
-function main (filename) {
+if (args.hasOwnProperty('files')) {
+    const filesPath = args.files;
+
+    glob(filesPath, {}, function(er, files){
+        files.forEach(function(file){
+            run(file);
+        });
+    });
+}
+
+function run (filename) {
 
     // read file, split lines as array cells, transform and write
     fs.readFile(filename, function(err, fileContent) {
@@ -210,10 +219,4 @@ function main (filename) {
            if (error) return console.log(error);
         });
     });
-}
-
-// Run command
-for (var i = 0; i < files.length; i++) {
-    let file = files[i];
-    main(file);
 }

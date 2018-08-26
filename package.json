@@ -1,6 +1,6 @@
 {
   "name": "ttlint",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Linter for Template Toolkit",
   "bin": {
     "ttlint": "index.js"
@@ -10,6 +10,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +19,9 @@
   },
   "author": "Hartumov G.",
   "license": "MIT",
-  "dependencies": {
-    "optionator": "^0.8.2"
+  "dependencies": {},
+  "devDependencies": {
+    "glob": "^7.1.2",
+    "minimist": "^1.2.0"
   }
 }

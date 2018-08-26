@@ -10,11 +10,11 @@ Module must be installed as globaly
 
 Just run command
 
-    $ ttlint 'path_to_file'
+    $ ttlint --flies 'path_to_file'
 
-You can specify several files in cli
+If you want use flies in folder:
 
-    $ ttlint 'path_to_file' 'path_to_another_file'
+    $ ttlint --files 'path_to_folder/**/*.*'
 
 ## Description
 
